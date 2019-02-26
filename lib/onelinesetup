@@ -27,7 +27,7 @@ fi
 mkdir ~/Magento-Shops/$DOMAIN
 cd ~/Magento-Shops/$DOMAIN
 
-curl -s https://raw.githubusercontent.com/gekamikh/docker-magento/master/lib/template|bash -s - magento-2
+curl -s https://raw.githubusercontent.com/klickly/klickly-docker-magento/master/lib/template|bash -s - magento-2
 bin/download $VERSION
 
 echo "Your system password has been requested to add an entry to /etc/hosts..."
