@@ -2,6 +2,16 @@
 DOMAIN=${1:-magento2.test}
 VERSION=${2:-2.3.0}
 
+if ! type brew > /dev/null; then
+  echo "Homerbrew is not installed. Installing..."
+  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+fi
+
+if ! type docker > /dev/null; then
+  echo "Docker is not installed. Installing..."
+  brew cask install docker
+fi
+
 curl -s https://raw.githubusercontent.com/gekamikh/docker-magento/master/lib/template|bash -s - magento-2
 bin/download $VERSION
 
@@ -9,3 +19,9 @@ echo "Your system password has been requested to add an entry to /etc/hosts..."
 echo "127.0.0.1 $DOMAIN" | sudo tee -a /etc/hosts
 
 bin/setup $DOMAIN
+
+bin/composer config repositories.klickly-extension git git@github.com:klickly/klickly-magento2-extension.git
+bin/composer require klickly/klickly-extension:dev-master
+bin/magento module:enable --clear-static-content Klickly_Extension
+bin/magento setup:upgrade
+bin/magento cache:clean
