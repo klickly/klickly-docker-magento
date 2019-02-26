@@ -1,6 +1,7 @@
 #!/bin/bash
 DOMAIN=${1:-magento2.test}
 VERSION=${2:-2.3.0}
+WITH_EXTENSION=${3:-false}
 
 if ! type brew > /dev/null; then
   echo "Homerbrew is not installed. Installing..."
@@ -32,4 +33,4 @@ bin/download $VERSION
 echo "Your system password has been requested to add an entry to /etc/hosts..."
 echo "127.0.0.1 $DOMAIN" | sudo tee -a /etc/hosts
 
-bin/setup $DOMAIN
+bin/setup $DOMAIN $WITH_EXTENSION
