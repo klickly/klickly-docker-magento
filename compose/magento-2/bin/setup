@@ -32,6 +32,13 @@ bin/clinotty bin/magento setup:install \
   --use-rewrites=1 \
   --backend-frontname=admin
 
+echo "Start installing klickly extension"
+bin/clinotty composer config repositories.klickly-extension git https://github.com/klickly/klickly-magento2-extension.git
+bin/clinotty composer require klickly/klickly-extension:dev-master
+bin/clinotty bin/magento module:enable --clear-static-content Klickly_Extension
+bin/clinotty bin/magento setup:upgrade
+echo "Klickly extension successfully installed"
+
 echo "Turning on developer mode.."
 bin/clinotty bin/magento deploy:mode:set developer
 

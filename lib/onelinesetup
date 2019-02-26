@@ -33,11 +33,3 @@ echo "Your system password has been requested to add an entry to /etc/hosts..."
 echo "127.0.0.1 $DOMAIN" | sudo tee -a /etc/hosts
 
 bin/setup $DOMAIN
-
-echo "Start installing klickly extension"
-bin/composer config repositories.klickly-extension git https://github.com/klickly/klickly-magento2-extension.git
-bin/composer require klickly/klickly-extension:dev-master
-bin/magento module:enable --clear-static-content Klickly_Extension
-bin/magento setup:upgrade
-bin/magento cache:clean
-echo "Klickly extension successfully installed"
