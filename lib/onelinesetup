@@ -12,6 +12,20 @@ if ! type docker > /dev/null; then
   brew cask install docker
 fi
 
+if [ ! -d "Magento-Shops" ]; then
+  mkdir ~/Magento-Shops
+fi
+
+cd ~/Magento-Shops
+
+if [ -d "$DOMAIN" ]; then
+  echo "Domain already in use, please specify another and try again"
+  return 0;
+fi
+
+mkdir ~/Magento-Shops/$DOMAIN
+cd ~/Magento-Shops/$DOMAIN
+
 curl -s https://raw.githubusercontent.com/gekamikh/docker-magento/master/lib/template|bash -s - magento-2
 bin/download $VERSION
 
