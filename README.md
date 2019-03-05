@@ -5,7 +5,7 @@ This package is fork [markshust/docker-magento](https://github.com/markshust/doc
 ### Manual to set up Magento 2:
 
 1. Open terminal
-2. Run ```сurl -s https://raw.githubusercontent.com/klickly/klickly-docker-magento/master/lib/onelinesetup\|bash -s -- magento2-shop-1.test 2.3.0 true```
+2. Run ```curl -s https://raw.githubusercontent.com/klickly/klickly-docker-magento/master/lib/onelinesetup|bash -s -- magento2-shop-1.test 2.3.0 true```
 
 Where:
   - `magento2-shop-1.test` - hostname (should be unique)

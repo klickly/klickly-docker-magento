@@ -8,9 +8,19 @@ if ! type brew > /dev/null; then
   /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 fi
 
+if ! type git > /dev/null; then
+  echo "Git is not installed. Installing..."
+  brew install git
+fi
+
 if ! type docker > /dev/null; then
   echo "Docker is not installed. Installing..."
   brew cask install docker
+  open /Applications/Docker.app
+
+  until docker info; do
+    sleep 1
+  done;
 fi
 
 if [ ! -d "Magento-Shops" ]; then
