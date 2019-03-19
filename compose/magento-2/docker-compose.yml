@@ -16,6 +16,7 @@ services:
       - appdata:/var/www/html
       - sockdata:/sock
       - ./conf/default.conf:/etc/nginx/conf.d/default.conf
+      - ~/.ssh:/var/www/.ssh
 
   phpfpm:
     image: markoshust/magento-php:7.2-fpm-0
