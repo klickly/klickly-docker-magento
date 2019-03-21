@@ -56,5 +56,8 @@ bin/copyfromcontainer vendor
 echo "Restarting containers with host bind mounts for dev..."
 bin/restart
 
+echo "Restarting containers with host bind mounts for dev..."
+sudo bin/fixperms
+
 echo "Docker development environment setup complete."
 echo "You may now access your Magento instance at http://${BASE_URL}/"

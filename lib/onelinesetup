@@ -66,5 +66,3 @@ bin/download $VERSION
 # echo "127.0.0.1 $DOMAIN" | sudo tee -a /etc/hosts
 
 bin/setup $DOMAIN
-
-sudo bin/fixperms
