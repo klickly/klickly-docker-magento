@@ -1,26 +1,56 @@
 #!/bin/bash
-DOMAIN=${1:-magento2.test}
+DOMAIN=${1:-test.magento.klickly-dev.com}
 VERSION=${2:-2.3.0}
+OS=$(uname -s)
 
-if ! type brew > /dev/null; then
-  echo "Homerbrew is not installed. Installing..."
-  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+if [[ $OS == 'Linux' ]]; then
+    if ! type docker > /dev/null; then
+    echo "Docker is not installed. Installing..."
+    sudo apt-get update
+    sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    sudo apt-get update
+    sudo apt-get install docker-ce docker-ce-cli containerd.io
+
+    sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+
+    until sudo docker info; do
+      sleep 1
+    done;
+  fi
+   
+elif [[ $OS == 'Darwin' ]]; then
+
+  if ! type brew > /dev/null; then
+    echo "Homerbrew is not installed. Installing..."
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  fi
+
+  if ! type git > /dev/null; then
+    echo "Git is not installed. Installing..."
+    brew install git
+  fi
+
+  if ! type docker > /dev/null; then
+    echo "Docker is not installed. Installing..."
+    brew cask install docker
+    open /Applications/Docker.app
+
+    until docker info; do
+      sleep 1
+    done;
+  fi
+
 fi
 
-if ! type git > /dev/null; then
-  echo "Git is not installed. Installing..."
-  brew install git
-fi
 
-if ! type docker > /dev/null; then
-  echo "Docker is not installed. Installing..."
-  brew cask install docker
-  open /Applications/Docker.app
 
-  until docker info; do
-    sleep 1
-  done;
-fi
+
+
+
+
 
 if [ ! -d "Magento-Shops" ]; then
   mkdir ~/Magento-Shops
@@ -39,7 +69,7 @@ cd ~/Magento-Shops/$DOMAIN
 curl -s https://raw.githubusercontent.com/klickly/klickly-docker-magento/master/lib/template|bash -s - magento-2
 bin/download $VERSION
 
-echo "Your system password has been requested to add an entry to /etc/hosts..."
-echo "127.0.0.1 $DOMAIN" | sudo tee -a /etc/hosts
+# echo "Your system password has been requested to add an entry to /etc/hosts..."
+# echo "127.0.0.1 $DOMAIN" | sudo tee -a /etc/hosts
 
 bin/setup $DOMAIN
