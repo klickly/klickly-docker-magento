@@ -32,9 +32,6 @@ bin/clinotty bin/magento setup:install \
   --use-rewrites=1 \
   --backend-frontname=admin
 
-echo "GGGJJHGJHGJHGJHGJHGJHGJHGJHGJHGJHGJHGJHGHJGJHGJHGJHGJHGHJ"
-bin/fixperms
-
 echo "Turning on developer mode.."
 bin/clinotty bin/magento deploy:mode:set developer
 
@@ -58,6 +55,8 @@ bin/copyfromcontainer vendor
 
 echo "Restarting containers with host bind mounts for dev..."
 bin/restart
+
+sudo bin/fixperms
 
 echo "Docker development environment setup complete."
 echo "You may now access your Magento instance at http://${BASE_URL}/"
