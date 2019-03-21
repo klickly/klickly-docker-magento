@@ -56,6 +56,7 @@ bin/copyfromcontainer vendor
 echo "Restarting containers with host bind mounts for dev..."
 bin/restart
 
+sudo bin/fixowns
 sudo bin/fixperms
 
 echo "Docker development environment setup complete."
