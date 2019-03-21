@@ -45,13 +45,6 @@ elif [[ $OS == 'Darwin' ]]; then
 
 fi
 
-
-
-
-
-
-
-
 if [ ! -d "Magento-Shops" ]; then
   mkdir ~/Magento-Shops
 fi
@@ -73,3 +66,5 @@ bin/download $VERSION
 # echo "127.0.0.1 $DOMAIN" | sudo tee -a /etc/hosts
 
 bin/setup $DOMAIN
+
+sudo bin/fixperms
