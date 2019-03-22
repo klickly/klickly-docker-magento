@@ -15,19 +15,19 @@ if [[ $OS == 'Linux' ]]; then
     sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
 
+    echo "Creating swap file"
+    sudo fallocate --length 2GiB /swapfile
+    sudo chmod 600 /swapfile
+    sudo mkswap /swapfile
+    sudo swapon /swapfile
+    echo "/swapfile     swap     swap     defaults     0     0" | sudo tee -a /etc/fstab
+    echo "vm.swappiness = 10" | sudo tee -a /etc/sysctl.conf
+    echo "vfs_cache_pressure = 50" | sudo tee -a /etc/sysctl.conf
+
     until sudo docker info; do
       sleep 1
     done;
   fi
-
-  echo "Creating swap file"
-  sudo fallocate --length 2GiB /swapfile
-  sudo chmod 600 /swapfile
-  sudo mkswap /swapfile
-  sudo swapon /swapfile
-  echo "/swapfile     swap     swap     defaults     0     0" | sudo tee -a /etc/fstab
-  echo "vm.swappiness = 10" | sudo tee -a /etc/sysctl.conf
-  echo "vfs_cache_pressure = 50" | sudo tee -a /etc/sysctl.conf
    
 elif [[ $OS == 'Darwin' ]]; then
 
