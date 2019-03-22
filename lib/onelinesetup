@@ -1,17 +1,16 @@
 #!/bin/bash
 DOMAIN=${1:-test.magento.klickly-dev.com}
 VERSION=${2:-2.3.0}
+IS_LOCAL=${3:-false}
 OS=$(uname -s)
 
 if [[ $OS == 'Linux' ]]; then
-    if ! type docker > /dev/null; then
+  if ! type docker > /dev/null; then
     echo "Docker is not installed. Installing..."
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
     sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
     sudo apt-get update
     sudo apt-get install -y docker-ce
-
-    # sudo usermod -aG docker ${USER}
 
     sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
@@ -20,6 +19,15 @@ if [[ $OS == 'Linux' ]]; then
       sleep 1
     done;
   fi
+
+  echo "Creating swap file"
+  sudo fallocate --length 2GiB /swapfile
+  sudo chmod 600 /swapfile
+  sudo mkswap /swapfile
+  sudo swapon /swapfile
+  echo "/swapfile     swap     swap     defaults     0     0" | sudo tee -a /etc/fstab
+  echo "vm.swappiness = 10" | sudo tee -a /etc/sysctl.conf
+  echo "vfs_cache_pressure = 50" | sudo tee -a /etc/sysctl.conf
    
 elif [[ $OS == 'Darwin' ]]; then
 
@@ -62,7 +70,9 @@ cd ~/Magento-Shops/$DOMAIN
 curl -s https://raw.githubusercontent.com/klickly/klickly-docker-magento/master/lib/template|bash -s - magento-2
 bin/download $VERSION
 
-# echo "Your system password has been requested to add an entry to /etc/hosts..."
-# echo "127.0.0.1 $DOMAIN" | sudo tee -a /etc/hosts
+if [ "$IS_LOCAL" == "true" ]; then
+  echo "Your system password has been requested to add an entry to /etc/hosts..."
+  echo "127.0.0.1 $DOMAIN" | sudo tee -a /etc/hosts
+fi
 
 sudo bin/setup $DOMAIN
