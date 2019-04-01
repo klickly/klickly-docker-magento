@@ -1,5 +1,6 @@
 #!/bin/bash
 BASE_URL=${1:-magento2.test}
+IS_LOCAL=${2:-false}
 
 bin/stop
 
@@ -56,8 +57,10 @@ bin/copyfromcontainer vendor
 echo "Restarting containers with host bind mounts for dev..."
 bin/restart
 
-sudo bin/fixowns
-sudo bin/fixperms
+if [ $IS_LOCAL == "false" ]; then
+  sudo bin/fixowns
+  sudo bin/fixperms
+fi
 
 echo "Docker development environment setup complete."
 echo "You may now access your Magento instance at http://${BASE_URL}/"
