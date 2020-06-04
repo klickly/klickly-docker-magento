@@ -6,7 +6,6 @@ ENV COMPOSER_HOME /var/www/.composer/
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 COPY ./auth.json $COMPOSER_HOME
-COPY ./auth.json $INSTALL_DIR
 
 # Install PHP libs and modules
 RUN requirements="libpng++-dev libzip-dev libmcrypt-dev libmcrypt4 libcurl3-dev libfreetype6 libjpeg62-turbo-dev libfreetype6-dev libicu-dev libxslt1-dev unzip cron" \
