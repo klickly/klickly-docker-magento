@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
+
+# Init env
 source .env
-# Install docker
-# sudo yum update -y
-# sudo amazon-linux-extras install -y docker
-# sudo service docker start
-# sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
-# sudo chmod +x /usr/local/bin/docker-compose
 
 # Create swap
 sudo fallocate --length 2GiB /swapfile
@@ -31,16 +27,18 @@ until sudo docker info; do
 done;
 
 # Install certbot
-sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-sudo yum-config-manager --enable epel
-sudo yum install -y certbot
+sudo apt-get install -y software-properties-common
+sudo add-apt-repository -y universe
+sudo add-apt-repository -y ppa:certbot/certbot
+sudo apt-get update -y
+sudo apt-get install -y certbot
 sudo certbot certonly --agree-tos  --standalone -d $HOST_NAME --register-unsafely-without-email --cert-name default-certificate
 
-# Clone magento extension // TEMP
-git clone -b $EXTENSION_ENV https://gekamikh:Gekamikh93@github.com/klickly/klickly-magento2-extension.git
+# Clone magento extension
+git clone -b $EXTENSION_BRANCH https://github.com/klickly/klickly-magento2-extension.git
 
 # Run
-docker-compose up -d
+sudo docker-compose up -d
 
 # Setup Magento
 sudo docker exec -it magento-php install-magento
