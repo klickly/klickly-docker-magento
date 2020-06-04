@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Start Cron
+# bin/magento cron:install
+# service cron start
+
+# Run server
+docker-php-entrypoint php-fpm

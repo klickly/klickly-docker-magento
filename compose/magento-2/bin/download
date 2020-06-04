@@ -1,4 +1,0 @@
-#!/bin/bash
-[ -z "$1" ] && echo "Please specify the version to download (ex. 2.0.0)" && exit
-curl -L https://github.com/magento/magento2/archive/$1.tar.gz | tar xzf - -o
-mv -v magento2-$1 src

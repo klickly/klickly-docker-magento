@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Install docker
+sudo yum update -y
+sudo amazon-linux-extras install docker
+sudo service docker start
+
+# Install certbot
+sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+sudo yum-config-manager --enable epel
+sudo yum install certbot
+sudo certbot certonly --agree-tos  --standalone -d $HOST_NAME --register-unsafely-without-email --cert-name default-certificate
+
+# Clone magento extension // TEMP
+git clone https://gekamikh:Gekamikh93@github.com/klickly/klickly-magento2-extension.git:$EXTENSION_ENV
+
+# Run
+sudo docker-compose up -d
+
+# Setup Magento
+sudo docker exec -it magento-php install-magento

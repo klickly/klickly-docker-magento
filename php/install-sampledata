@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+/var/www/html/bin/magento sampledata:deploy
+/var/www/html/bin/magento setup:upgrade
