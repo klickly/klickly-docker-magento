@@ -1,14 +1,13 @@
 version: '3'
 services:
   php:
-    # image: 375760062156.dkr.ecr.us-west-2.amazonaws.com/magento-shop:latest
-    build: : php
+    build: php
     container_name: magento-php
     ports:
       - 9000:9000
     volumes:
       - magento-data:/var/www/html
-      - ${MAGENTO_EXTENSION_PATH:./klickly-magento2-extension}:/var/www/html/app/code/Klickly/Extension/
+      - ${MAGENTO_EXTENSION_PATH:-./klickly-magento2-extension}:/var/www/html/app/code/Klickly/Extension/
     networks:
       - appnet
     env_file:

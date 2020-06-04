@@ -1,21 +1,46 @@
-#!/bin/bash
+#!/usr/bin/env bash
+source .env
+# Install docker
+# sudo yum update -y
+# sudo amazon-linux-extras install -y docker
+# sudo service docker start
+# sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+# sudo chmod +x /usr/local/bin/docker-compose
+
+# Create swap
+sudo fallocate --length 2GiB /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+echo "/swapfile     swap     swap     defaults     0     0" | sudo tee -a /etc/fstab
+echo "vm.swappiness = 10" | sudo tee -a /etc/sysctl.conf
+echo "vfs_cache_pressure = 50" | sudo tee -a /etc/sysctl.conf
 
 # Install docker
-sudo yum update -y
-sudo amazon-linux-extras install docker
-sudo service docker start
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt-get update
+sudo apt-get install -y docker-ce
+
+sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+# Check docker started
+until sudo docker info; do
+  sleep 1
+done;
 
 # Install certbot
 sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 sudo yum-config-manager --enable epel
-sudo yum install certbot
+sudo yum install -y certbot
 sudo certbot certonly --agree-tos  --standalone -d $HOST_NAME --register-unsafely-without-email --cert-name default-certificate
 
 # Clone magento extension // TEMP
-git clone https://gekamikh:Gekamikh93@github.com/klickly/klickly-magento2-extension.git:$EXTENSION_ENV
+git clone -b $EXTENSION_ENV https://gekamikh:Gekamikh93@github.com/klickly/klickly-magento2-extension.git
 
 # Run
-sudo docker-compose up -d
+docker-compose up -d
 
 # Setup Magento
 sudo docker exec -it magento-php install-magento
